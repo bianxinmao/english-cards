@@ -104,7 +104,7 @@ header p{color:var(--muted);font-size:13px;margin-top:4px;}
 <div class="wrap">
   <header>
     <h1>英语学习卡片</h1>
-    <p>艾宾浩斯记忆法：1 → 2 → 4 → 7 → 15 → 30 天循环复习</p>
+    <p>艾宾浩斯记忆法：1 → 2 → 4 → 7 → 15 → 30 天循环复习　<a href="javascript:void(0)" onclick="resetProg()" style="color:var(--danger);font-size:12px">重置进度</a></p>
   </header>
   <div class="tabs">
     <button class="tab on" id="tabLearn">学习</button>
@@ -320,6 +320,15 @@ function show(name){
 tabs.learn.onclick=()=>show('learn');
 tabs.review.onclick=()=>show('review');
 tabs.quiz.onclick=()=>show('quiz');
+function resetProg(){
+  if(confirm('确定清空全部学习和复习进度，从零开始吗？')){
+    localStorage.removeItem('eng_prog');
+    localStorage.removeItem('eng_seen');
+    prog={};
+    renderLearn();updateProg();
+    alert('已重置。点单词旁的🔊即可重新开始学习。');
+  }
+}
 if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>{};speechSynthesis.getVoices();}
 renderLearn();updateProg();
 </script>
