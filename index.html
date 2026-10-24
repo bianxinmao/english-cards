@@ -148,6 +148,80 @@ const DATA=[
  {c:"日常沟通",w:"regarding",ipa:"/rɪˈɡɑːrdɪŋ/",pos:"prep.",cn:"关于",ex:"I'm writing regarding your recent inquiry.",exzh:"来信是关于您近期的咨询。",use:"邮件主题行高频：Regarding + 事项 = 「关于……」。同义 in regard to / with regard to，比 about 更正式。"}
 ];
 const IV=[1,2,4,7,15,30], DAY=864e5, MIN=6e4;
+/* 扩展词库：初始24词学完后，每天解锁5个 */
+const BANK=[
+ {c:"开会与讨论",w:"agenda",ipa:"/əˈdʒendə/",pos:"n.",cn:"议程，议题",ex:"The agenda for tomorrow's meeting has three items.",exzh:"明天会议的议程有三项。",use:"固定搭配 <b>on the agenda</b>（在议程上）：Let's put this on the agenda。"},
+ {c:"开会与讨论",w:"minutes",ipa:"/ˈmɪnɪts/",pos:"n.(复数)",cn:"会议记录",ex:"Who will take the minutes today?",exzh:"今天谁做会议记录？",use:"注意不是「分钟」！take/keep the minutes 做会议记录；minutes of the meeting 会议纪要。"},
+ {c:"开会与讨论",w:"postpone",ipa:"/poʊstˈpoʊn/",pos:"v.",cn:"推迟，延期",ex:"The meeting was postponed until next week.",exzh:"会议被推迟到下周。",use:"postpone + 名词/to+时间。同义 put off（口语）。名词 postponement。"},
+ {c:"开会与讨论",w:"attend",ipa:"/əˈtend/",pos:"v.",cn:"出席，参加",ex:"All managers are required to attend the review meeting.",exzh:"所有经理都必须参加复评会议。",use:"attend a meeting/class 出席会议/上课。名词 attendance（出勤）。注意：attend 及物，不加 to。"},
+ {c:"开会与讨论",w:"assign",ipa:"/əˈsaɪn/",pos:"v.",cn:"分配，指派",ex:"The task was assigned to our team.",exzh:"这个任务被分配给了我们团队。",use:"assign sth to sb 把某事指派给某人。名词 assignment（任务；作业）。"},
+ {c:"财务与审计",w:"engagement",ipa:"/ɪnˈɡeɪdʒmənt/",pos:"n.",cn:"（审计）业务约定；聘约",ex:"We signed the engagement letter last Friday.",exzh:"我们上周五签署了业务约定书。",use:"审计专用义：engagement letter = <b>业务约定书</b>，engagement team = 审计项目组。别只记「约会」。"},
+ {c:"财务与审计",w:"sampling",ipa:"/ˈsæmplɪŋ/",pos:"n.",cn:"抽样",ex:"We use statistical sampling to select transactions.",exzh:"我们用统计抽样来选取交易。",use:"audit sampling 审计抽样；sample size 样本量。动词 sample（抽样检查）。"},
+ {c:"财务与审计",w:"workpaper",ipa:"/ˈwɜːrkpeɪpər/",pos:"n.",cn:"审计工作底稿",ex:"All workpapers must be filed before the report is issued.",exzh:"出具报告前必须完成所有底稿归档。",use:"常写 workpapers（复数）或 working papers，就是国内说的<b>底稿</b>。"},
+ {c:"财务与审计",w:"assurance",ipa:"/əˈʃʊərəns/",pos:"n.",cn:"保证，鉴证",ex:"We provide reasonable assurance on the financial statements.",exzh:"我们对财务报表提供合理保证。",use:"assurance services 鉴证业务；reasonable assurance 合理保证（审计的标志表述）。"},
+ {c:"财务与审计",w:"compliance",ipa:"/kəmˈplaɪəns/",pos:"n.",cn:"合规，遵守",ex:"The company is in full compliance with tax regulations.",exzh:"公司完全遵守税务法规。",use:"in compliance with 遵守；compliance test 控制测试/合规测试。形容词 compliant。"},
+ {c:"财务与审计",w:"discrepancy",ipa:"/dɪsˈkrepənsi/",pos:"n.",cn:"差异，不一致",ex:"There is a discrepancy between the two reports.",exzh:"两份报告之间存在差异。",use:"指<b>应该一致却不一致</b>的地方，对账、盘点最常用。同义 difference，但 discrepancy 更正式。"},
+ {c:"财务与审计",w:"verify",ipa:"/ˈverɪfaɪ/",pos:"v.",cn:"核实，查证",ex:"We verified the balances with the bank directly.",exzh:"我们直接与银行核对了余额。",use:"verify + 名词。名词 verification（函证、验证）。形容词 verifiable（可验证的）。"},
+ {c:"财务与审计",w:"assess",ipa:"/əˈses/",pos:"v.",cn:"评估，评定",ex:"We need to assess the risk of material misstatement.",exzh:"我们需要评估重大错报风险。",use:"assess risk 评估风险（审计高频）。名词 assessment（评估）：risk assessment 风险评估。注意拼写双 s。"},
+ {c:"财务与审计",w:"assertion",ipa:"/əˈsɜːrʃn/",pos:"n.",cn:"（管理层的）认定",ex:"We tested the existence assertion for inventory.",exzh:"我们对存货的存在性认定进行了测试。",use:"审计理论核心词：management assertions 管理层认定（存在、完整性、准确性等）。"},
+ {c:"财务与审计",w:"inventory",ipa:"/ˈɪnvəntɔːri/",pos:"n.",cn:"存货；库存清单",ex:"We attended the annual inventory count.",exzh:"我们参加了年度存货盘点。",use:"inventory count 存货盘点（审计必参加）。动词方式：take inventory 盘点。"},
+ {c:"财务报表",w:"revenue",ipa:"/ˈrevənuː/",pos:"n.",cn:"收入，营收",ex:"Revenue grew 15% year over year.",exzh:"收入同比增长了15%。",use:"revenue recognition 收入确认（审计重点领域）。区别 income（利润/收益）。"},
+ {c:"财务报表",w:"expense",ipa:"/ɪkˈspens/",pos:"n.",cn:"费用，开支",ex:"Operating expenses increased faster than revenue.",exzh:"营业费用的增长快于收入。",use:"operating expenses（OpEx）营业费用；capital expenditure（CapEx）资本支出。动词 expend。"},
+ {c:"财务报表",w:"liability",ipa:"/ˌlaɪəˈbɪləti/",pos:"n.",cn:"负债；责任",ex:"Total liabilities exceed total assets this year.",exzh:"今年总负债超过了总资产。",use:"assets and liabilities 资产与负债。legal liability 法律责任。复数 liabilities 常指负债总额。"},
+ {c:"财务报表",w:"equity",ipa:"/ˈekwəti/",pos:"n.",cn:"权益，股本",ex:"Return on equity improved to 12 percent.",exzh:"净资产收益率提升至12%。",use:"owners' equity 所有者权益；statement of changes in equity 权益变动表。会计恒等式：Assets = Liabilities + Equity。"},
+ {c:"财务报表",w:"accrual",ipa:"/əˈkruːəl/",pos:"n.",cn:"权责发生；应计项目",ex:"We record expenses on the accrual basis.",exzh:"我们按权责发生制记录费用。",use:"accrual basis 权责发生制（对比 cash basis 收付实现制）。动词 accrue（计提、自然增长）。"},
+ {c:"财务报表",w:"provision",ipa:"/prəˈvɪʒn/",pos:"n.",cn:"准备金；条款",ex:"The bank increased its provision for bad loans.",exzh:"银行提高了不良贷款准备金。",use:"两义都常考：<b>准备金</b>（provision for bad debts 坏账准备）和<b>法规条款</b>（under the provisions of the law）。"},
+ {c:"财务报表",w:"deficit",ipa:"/ˈdefəsɪt/",pos:"n.",cn:"赤字，亏损",ex:"The company reported a cash deficit last quarter.",exzh:"公司上季度报告了现金赤字。",use:"budget deficit 预算赤字；反义 surplus 盈余。搭配 run a deficit 出现赤字。"},
+ {c:"财务报表",w:"consolidation",ipa:"/kənˌsɒlɪˈdeɪʃn/",pos:"n.",cn:"合并，报表合并",ex:"Consolidation eliminated intercompany transactions.",exzh:"合并抵销了内部关联交易。",use:"consolidated financial statements 合并财务报表。动词 consolidate（合并）。intercompany 内部交易。"},
+ {c:"数据分析",w:"statistic",ipa:"/stəˈtɪstɪk/",pos:"n.",cn:"统计数据",ex:"The statistics show a clear downward trend.",exzh:"统计数据显示出明显的下降趋势。",use:"statistics 统计学/统计数据（作学科时单数）。statistical significance 统计显著性。"},
+ {c:"数据分析",w:"correlation",ipa:"/ˌkɔːrəˈleɪʃn/",pos:"n.",cn:"相关性",ex:"There is a strong correlation between sales and advertising.",exzh:"销售与广告之间有很强的相关性。",use:"correlation between A and B。注意：<b>correlation is not causation</b> 相关不等于因果——数据分析金句。"},
+ {c:"数据分析",w:"forecast",ipa:"/ˈfɔːrkæst/",pos:"v./n.",cn:"预测",ex:"We forecast a 10% increase in demand.",exzh:"我们预测需求将增长10%。",use:"过去式仍为 forecast（不是 forecasted）。cash flow forecast 现金流预测。"},
+ {c:"数据分析",w:"benchmark",ipa:"/ˈbentʃmɑːrk/",pos:"n./v.",cn:"基准；对标",ex:"We benchmark our costs against industry standards.",exzh:"我们以行业标准为基准对比成本。",use:"benchmark against 与……对标。作名词指<b>参照标准</b>。"},
+ {c:"数据分析",w:"indicator",ipa:"/ˈɪndɪkeɪtər/",pos:"n.",cn:"指标",ex:"Customer satisfaction is a key performance indicator.",exzh:"客户满意度是一个关键绩效指标。",use:"KPI = key performance indicator 关键绩效指标。动词 indicate（表明）。"},
+ {c:"数据处理",w:"summarize",ipa:"/ˈsʌməraɪz/",pos:"v.",cn:"总结，概括",ex:"Please summarize the findings in one page.",exzh:"请用一页纸总结发现。",use:"名词 summary（摘要）。summarize the results/findings 总结结果/发现。"},
+ {c:"数据处理",w:"visualize",ipa:"/ˈvɪʒuəlaɪz/",pos:"v.",cn:"可视化，使形象化",ex:"The dashboard visualizes monthly sales data.",exzh:"这个仪表盘把月度销售数据可视化。",use:"名词 visualization（可视化图表）。data visualization 数据可视化。"},
+ {c:"数据处理",w:"filter",ipa:"/ˈfɪltər/",pos:"v./n.",cn:"筛选；过滤器",ex:"Filter the list by date before exporting.",exzh:"导出前先按日期筛选列表。",use:"Excel/数据库高频操作：filter by + 条件。名词 filter 筛选器；filter out 过滤掉。"},
+ {c:"数据处理",w:"export",ipa:"/ɪkˈspɔːrt/",pos:"v./n.",cn:"导出；出口",ex:"Export the report as a PDF file.",exzh:"把报告导出为PDF文件。",use:"export to + 格式。反义 import（导入；进口）。重音：动词后重音，名词前重音。"},
+ {c:"邮件沟通",w:"attach",ipa:"/əˈtætʃ/",pos:"v.",cn:"附上，附件",ex:"Please find the contract attached.",exzh:"请查收附件中的合同。",use:"attachment 附件。经典邮件句：<b>Attached please find...</b> / Please see attached。"},
+ {c:"邮件沟通",w:"forward",ipa:"/ˈfɔːrwərd/",pos:"v.",cn:"转发",ex:"Could you forward this email to the client?",exzh:"你能把这封邮件转发给客户吗？",use:"forward sth to sb 转发给某人。名词/形容词义是「向前；期货」(forwards contract 远期合约)。"},
+ {c:"邮件沟通",w:"notify",ipa:"/ˈnoʊtɪfaɪ/",pos:"v.",cn:"通知",ex:"We will notify you once the audit is complete.",exzh:"审计完成后我们会通知您。",use:"notify sb of sth。名词 notification（通知）。正式书面语，比 tell 正式。"},
+ {c:"邮件沟通",w:"remind",ipa:"/rɪˈmaɪnd/",pos:"v.",cn:"提醒",ex:"This is a friendly reminder about the overdue invoice.",exzh:"友情提醒：发票已逾期。",use:"a friendly reminder 温馨提示（催办邮件标题常用）。remind sb to do / remind sb of sth。"},
+ {c:"邮件沟通",w:"clarify",ipa:"/ˈklærɪfaɪ/",pos:"v.",cn:"澄清，说明",ex:"Could you clarify the third point in your report?",exzh:"你能澄清一下报告中第三点吗？",use:"clarify + 疑问词：clarify what/whether... 名词 clarification。礼貌请求澄清：Just to clarify,..."},
+ {c:"邮件沟通",w:"apologize",ipa:"/əˈpɑːlədʒaɪz/",pos:"v.",cn:"道歉",ex:"We apologize for the delay in our response.",exzh:"我们对回复迟缓深表歉意。",use:"apologize for + 事情。名词 apology（复数 apologies）。商务邮件致歉标准句。"},
+ {c:"邮件沟通",w:"assure",ipa:"/əˈʃʊr/",pos:"v.",cn:"向……保证",ex:"I assure you that the data has been double-checked.",exzh:"我向您保证数据已经过双重核对。",use:"assure sb that / assure sb of sth（必须带人做宾语）。区别 ensure（确保某事发生）、insure（投保）。"},
+ {c:"邮件沟通",w:"inquire",ipa:"/ɪnˈkwaɪər/",pos:"v.",cn:"询问，咨询",ex:"The client inquired about the audit fee.",exzh:"客户询问了审计费用。",use:"inquire about + 事项。名词 inquiry（询证函 = confirmation inquiry 里的询证也用它）。美式也拼 enquire。"},
+ {c:"职场表达",w:"overtime",ipa:"/ˈoʊvərtaɪm/",pos:"n./adv.",cn:"加班",ex:"We worked overtime to meet the filing deadline.",exzh:"为了赶上申报期限我们加班了。",use:"work overtime 加班（动词短语）。overtime pay 加班费。busy season 忙季是审计人的宿命。"},
+ {c:"职场表达",w:"colleague",ipa:"/ˈkɑːliːɡ/",pos:"n.",cn:"同事",ex:"My colleagues in the Beijing office helped a lot.",exzh:"北京办公室的同事帮了很多。",use:"注意发音 /ˈkɒliːɡ/，重音在前。区别 college（学院）。"},
+ {c:"职场表达",w:"evaluation",ipa:"/ɪˌvæljuˈeɪʃn/",pos:"n.",cn:"评估，考核",ex:"Annual performance evaluation starts next month.",exzh:"年度绩效考核下月开始。",use:"performance evaluation 绩效考核。动词 evaluate（同 assess 意思相近，更日常）。"},
+ {c:"职场表达",w:"promotion",ipa:"/prəˈmoʊʃn/",pos:"n.",cn:"晋升；促销",ex:"She got a promotion to senior auditor.",exzh:"她晋升为高级审计员。",use:"get/receive a promotion 晋升。另一义：sales promotion 促销。动词 promote。"},
+ {c:"职场表达",w:"resign",ipa:"/rɪˈzaɪn/",pos:"v.",cn:"辞职",ex:"The CFO resigned for personal reasons.",exzh:"首席财务官因个人原因辞职。",use:"resign from + 职位。名词 resignation（辞职信 = resignation letter）。注意区别 re-sign（重新签约）。"},
+ {c:"逻辑连接",w:"furthermore",ipa:"/ˈfɜːrðərmɔːr/",pos:"adv.",cn:"此外，而且",ex:"Furthermore, the sample size was too small.",exzh:"此外，样本量太小了。",use:"正式写作连接词，引出补充论据。同类：moreover, in addition。报告和邮件里非常好用。"},
+ {c:"逻辑连接",w:"nevertheless",ipa:"/ˌnevərðəˈles/",pos:"adv.",cn:"然而，尽管如此",ex:"Nevertheless, we believe the risk is controllable.",exzh:"尽管如此，我们认为风险是可控的。",use:"表示转折让步，比 but 正式得多，审计报告常用。<b>Nevertheless</b>, ... 放句首。"},
+ {c:"逻辑连接",w:"therefore",ipa:"/ˈðerfɔːr/",pos:"adv.",cn:"因此，所以",ex:"Therefore, we recommend an immediate review.",exzh:"因此，我们建议立即进行复核。",use:" therefore 推出结论，放句首加逗号。审计意见书里出现率最高的词之一。"},
+ {c:"逻辑连接",w:"whereas",ipa:"/werˈæz/",pos:"conj.",cn:"然而，鉴于",ex:"Revenue rose, whereas costs remained flat.",exzh:"收入上升了，而成本保持平稳。",use:"对比两类事实。合同里还有「鉴于」义：<b>Whereas</b> the parties agreed... 鉴于双方同意……"},
+ {c:"逻辑连接",w:"meanwhile",ipa:"/ˈmiːnwaɪl/",pos:"adv.",cn:"与此同时",ex:"Meanwhile, the finance team prepared the files.",exzh:"与此同时，财务团队在准备底稿。",use:"in the meanwhile/meantime 同义。叙述两件并行的事时用。"},
+ {c:"高频动词",w:"maintain",ipa:"/meɪnˈteɪn/",pos:"v.",cn:"维持，保养；坚持认为",ex:"The company maintains detailed accounting records.",exzh:"公司保存有详细的会计记录。",use:"maintain records/systems 维护记录/系统。名词 maintenance /ˈmeɪntənəns/（维护费）。"},
+ {c:"高频动词",w:"ensure",ipa:"/ɪnˈʃʊr/",pos:"v.",cn:"确保",ex:"Please ensure that all files are backed up.",exzh:"请确保所有文件都已备份。",use:"ensure + that 从句/名词。区别 assure（向人保证）、insure（投保）。写作高频。"},
+ {c:"高频动词",w:"involve",ipa:"/ɪnˈvɑːlv/",pos:"v.",cn:"涉及，包含",ex:"The engagement involves two overseas subsidiaries.",exzh:"这个项目涉及两家海外子公司。",use:"be involved in 参与/涉及。名词 involvement。展会项目范围时常用。"},
+ {c:"高频动词",w:"proceed",ipa:"/proʊˈsiːd/",pos:"v.",cn:"继续进行，着手",ex:"We will proceed with the fieldwork as planned.",exzh:"我们将按计划继续现场工作。",use:"proceed with + 事情。名词 procedure（程序）同源。fieldwork 现场工作。"},
+ {c:"高频动词",w:"effort",ipa:"/ˈefərt/",pos:"n.",cn:"努力",ex:"Thanks for everyone's effort on this project.",exzh:"感谢大家在这个项目上的努力。",use:"make an effort / put in effort 付出努力。joint effort 共同努力。"},
+ {c:"高频动词",w:"update",ipa:"/ʌpˈdeɪt/",pos:"v./n.",cn:"更新；最新进展",ex:"Please keep us updated on the progress.",exzh:"请让我们随时了解进展。",use:"update sb on sth 向某人更新某事。a quick update 简短进展汇报（晨会常用）。"}
+];
+let extra=parseInt(localStorage.getItem('eng_extra')||'0',10)||0;
+DATA.push.apply(DATA,BANK.slice(0,extra));
+function unlockNew(){
+  const todayStr=new Date().toDateString();
+  if(localStorage.getItem('eng_unlock_date')===todayStr){alert('今天的新词已解锁，明天再来！记忆需要时间沉淀~');return;}
+  const add=BANK.slice(extra,extra+5);
+  if(!add.length){alert('本期词库已学完，我会不定期补充新词');return;}
+  DATA.push.apply(DATA,add);
+  extra+=add.length;
+  localStorage.setItem('eng_extra',String(extra));
+  localStorage.setItem('eng_unlock_date',todayStr);
+  renderLearn();updateProg();
+  window.scrollTo({top:0,behavior:'smooth'});
+  alert('已解锁5个新词，就在列表最下方！');
+}
 const learnEl=document.getElementById('learn'),quizEl=document.getElementById('quiz'),rvEl=document.getElementById('review');
 const pbar=document.getElementById('pbar'),pinfo=document.getElementById('pinfo');
 /* 迁移旧数据 */
@@ -210,7 +284,21 @@ function refreshBadges(w){
 }
 function renderLearn(){
   let lastCat='';
-  learnEl.innerHTML=DATA.map((d)=>{
+  let html='';
+  const initialDone=DATA.slice(0,24).every(d=>prog[d.w]);
+  const unlockedAll=extra>=BANK.length;
+  if(initialDone && !unlockedAll){
+    const unlockedToday=localStorage.getItem('eng_unlock_date')===new Date().toDateString();
+    const remain=BANK.length-extra;
+    html+='<div class="card" style="text-align:center;background:var(--accent-soft);border-color:var(--accent)">'+
+      '<div style="font-size:15px;font-weight:600;">初始 24 词已全部开始学习 🎉</div>'+
+      '<div style="font-size:13px;color:var(--muted);margin:6px 0 10px;">每天可解锁 5 个新词（剩余词库 '+remain+' 个）</div>'+
+      '<button class="next" style="max-width:240px;margin:0 auto;'+(unlockedToday?'opacity:.4':'')+'" onclick="unlockNew()">'+
+      (unlockedToday?'今日已解锁，明天再来':'解锁今日 5 个新词')+'</button></div>';
+  }else if(!initialDone){
+    html+='<div class="hint" style="text-align:center;margin-bottom:10px;">学完初始 24 词后，每天解锁 5 个新词（'+DATA.slice(0,24).filter(d=>prog[d.w]).length+'/24）</div>';
+  }
+  html+=DATA.map((d)=>{
     const id=d.w.replace(/ /g,'_');
     let html='';
     if(d.c!==lastCat){lastCat=d.c;html+='<div class="cat">'+d.c+'</div>';}
@@ -224,6 +312,7 @@ function renderLearn(){
       '<div class="use">用法：'+d.use+'</div></div>';
     return html;
   }).join('');
+  learnEl.innerHTML=html;
 }
 /* 复习 */
 let rvQueue=[],rvIdx=0;
