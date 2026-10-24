@@ -8,6 +8,7 @@
 :root{
   --bg:#f7f6f3; --card:#ffffff; --ink:#1d2733; --muted:#6b7683;
   --line:#e5e2dc; --accent:#0e7a5f; --accent-soft:#e3f2ed;
+  --warn:#b7791f; --warn-soft:#fdf3e0; --danger:#c0392b;
   --radius:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -16,7 +17,7 @@ body{
   font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:520px;margin:0 auto;padding:20px 16px calc(88px + env(safe-area-inset-bottom));}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px calc(96px + env(safe-area-inset-bottom));}
 header{padding:8px 2px 18px;}
 header h1{font-size:22px;letter-spacing:.5px;}
 header p{color:var(--muted);font-size:13px;margin-top:4px;}
@@ -29,8 +30,9 @@ header p{color:var(--muted);font-size:13px;margin-top:4px;}
 .cat{font-size:13px;color:var(--accent);font-weight:600;margin:18px 2px 8px;}
 .card{
   background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px;margin-bottom:12px;
+  padding:16px;margin-bottom:12px;position:relative;
 }
+.card.due{border-color:var(--warn);background:var(--warn-soft);}
 .row1{display:flex;align-items:center;gap:10px;}
 .word{font-size:22px;font-weight:700;letter-spacing:.3px;}
 .pos{font-size:12px;color:var(--muted);background:var(--bg);border-radius:6px;padding:2px 7px;}
@@ -39,6 +41,12 @@ header p{color:var(--muted);font-size:13px;margin-top:4px;}
   background:var(--accent-soft);color:var(--accent);font-size:16px;cursor:pointer;
 }
 .speak:active{transform:scale(.95)}
+.badge{
+  display:inline-block;font-size:11px;border-radius:6px;padding:2px 7px;margin-top:8px;
+  background:var(--bg);color:var(--muted);
+}
+.badge.due{background:var(--warn);color:#fff;}
+.badge.done{background:var(--accent);color:#fff;}
 .ipa{font-family:"Times New Roman",serif;color:var(--accent);font-size:15px;margin-top:5px;}
 .cn{font-size:15px;margin-top:7px;}
 .ex{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
@@ -46,7 +54,21 @@ header p{color:var(--muted);font-size:13px;margin-top:4px;}
 .ex .zh{font-size:13.5px;color:var(--muted);margin-top:3px;}
 .use{font-size:13px;color:var(--muted);margin-top:9px;line-height:1.55;}
 .use b{color:var(--ink);font-weight:600;}
-/* quiz */
+/* 复习 */
+.rv-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px;margin-bottom:12px;}
+.rv-word{font-size:26px;font-weight:700;text-align:center;}
+.rv-ipa{text-align:center;color:var(--accent);font-family:"Times New Roman",serif;margin:6px 0 14px;}
+.rv-speak{display:block;margin:0 auto 14px;min-width:88px;height:44px;border:none;border-radius:12px;background:var(--accent-soft);color:var(--accent);font-size:16px;cursor:pointer;}
+.rv-cn{display:none;text-align:center;font-size:17px;margin-bottom:16px;color:var(--ink);}
+.rv-btns{display:flex;gap:10px;}
+.rv-btns button{flex:1;padding:14px 0;border:none;border-radius:12px;font-size:15px;cursor:pointer;min-height:48px;}
+.b-yes{background:var(--accent);color:#fff;}
+.b-no{background:#fbeaea;color:var(--danger);}
+.rv-next{width:100%;margin-top:10px;padding:12px;border:none;border-radius:12px;background:var(--ink);color:#fff;font-size:15px;cursor:pointer;display:none;}
+.rv-empty{text-align:center;color:var(--muted);padding:40px 20px;font-size:14px;line-height:1.8;}
+.rv-empty b{color:var(--ink);}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;}
+/* 自测 */
 .quiz-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px;}
 .q-head{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:14px;}
 .q-word{font-size:24px;font-weight:700;text-align:center;margin:14px 0 4px;}
@@ -56,7 +78,7 @@ header p{color:var(--muted);font-size:13px;margin-top:4px;}
   border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px;cursor:pointer;min-height:48px;
 }
 .opt.right{border-color:var(--accent);background:var(--accent-soft);}
-.opt.wrong{border-color:#c0392b;background:#fbeaea;}
+.opt.wrong{border-color:var(--danger);background:#fbeaea;}
 .opt:disabled{cursor:default;}
 .next{
   width:100%;padding:13px;border:none;border-radius:12px;background:var(--ink);
@@ -82,13 +104,15 @@ header p{color:var(--muted);font-size:13px;margin-top:4px;}
 <div class="wrap">
   <header>
     <h1>英语学习卡片</h1>
-    <p>发音 · 用法 · 翻译 · 自测 —— 职场实用篇</p>
+    <p>艾宾浩斯记忆法：1 → 2 → 4 → 7 → 15 → 30 天循环复习</p>
   </header>
   <div class="tabs">
     <button class="tab on" id="tabLearn">学习</button>
+    <button class="tab" id="tabReview">复习</button>
     <button class="tab" id="tabQuiz">自测</button>
   </div>
   <div id="learn"></div>
+  <div id="review" style="display:none"></div>
   <div id="quiz" style="display:none"></div>
 </div>
 <div class="bottom"><div class="bar">
@@ -105,7 +129,7 @@ const DATA=[
  {c:"开会与讨论",w:"proposal",ipa:"/prəˈpoʊzl/",pos:"n.",cn:"提案，建议书",ex:"The client accepted our audit proposal.",exzh:"客户接受了我们的审计建议书。",use:"动词是 propose（提议）。常用搭配 <b>submit a proposal</b>（提交提案）、<b>approve a proposal</b>（批准提案）。"},
  {c:"财务与审计",w:"reconcile",ipa:"/ˈrekənsaɪl/",pos:"v.",cn:"核对，对账；使一致",ex:"We must reconcile the bank statement with the ledger.",exzh:"我们必须把银行对账单和总账核对一致。",use:"财务核心词。名词 <b>reconciliation</b>（银行余额调节表）。注意重音在第一音节。"},
  {c:"财务与审计",w:"ledger",ipa:"/ˈledʒər/",pos:"n.",cn:"总账，分类账",ex:"All entries are recorded in the general ledger.",exzh:"所有分录都记在总账里。",use:"general ledger（总账，缩写 GL）是审计底稿常见缩写。sub-ledger 是明细账。"},
- {c:"财务与审计",w:"adjustment",ipa:"/əˈdʒʌstmənt/",pos:"n.",cn:"调整，调整分录",ex:"The auditor proposed two adjustments to the financial statements.",exzh:"审计师对财务报表提出了两项调整。",use:"审计里 audit adjustment 指<b>审计调整分录</b>。动词 adjust（调整），re adjusting entry = 调整分录。"},
+ {c:"财务与审计",w:"adjustment",ipa:"/əˈdʒʌstmənt/",pos:"n.",cn:"调整，调整分录",ex:"The auditor proposed two adjustments to the financial statements.",exzh:"审计师对财务报表提出了两项调整。",use:"审计里 audit adjustment 指<b>审计调整分录</b>。动词 adjust（调整），adjusting entry = 调整分录。"},
  {c:"财务与审计",w:"materiality",ipa:"/məˌtɪriˈæləti/",pos:"n.",cn:"重要性（水平）",ex:"We set materiality at 5% of total assets.",exzh:"我们将重要性水平设定为总资产的5%。",use:"审计最核心概念之一。形容词 <b>material</b>（重大的）：a material misstatement 重大错报。"},
  {c:"财务与审计",w:"voucher",ipa:"/ˈvaʊtʃər/",pos:"n.",cn:"凭证，凭单",ex:"Please attach the invoice to the payment voucher.",exzh:"请把发票附在付款凭证后面。",use:"payment voucher 付款凭证，reimbursement voucher 报销单。国内财务说的「凭证」就是它。"},
  {c:"财务与审计",w:"receivable",ipa:"/rɪˈsiːvəbl/",pos:"n.(常用复数)",cn:"应收款项",ex:"Accounts receivable increased by 10% this quarter.",exzh:"本季度应收账款增长了10%。",use:"accounts receivable（AR）应收账款；notes receivable 应收票据；对面的应付账款是 accounts <b>payable</b>。"},
@@ -123,17 +147,33 @@ const DATA=[
  {c:"日常沟通",w:"compromise",ipa:"/ˈkɑːmprəmaɪz/",pos:"n./v.",cn:"妥协，折中方案",ex:"We reached a compromise on the delivery date.",exzh:"我们就交货日期达成了折中方案。",use:"reach/make a compromise 达成妥协。注意另一义：<b>compromise security</b> 危及安全（数据泄露新闻常用）。"},
  {c:"日常沟通",w:"regarding",ipa:"/rɪˈɡɑːrdɪŋ/",pos:"prep.",cn:"关于",ex:"I'm writing regarding your recent inquiry.",exzh:"来信是关于您近期的咨询。",use:"邮件主题行高频：Regarding + 事项 = 「关于……」。同义 in regard to / with regard to，比 about 更正式。"}
 ];
-const learnEl=document.getElementById('learn'),quizEl=document.getElementById('quiz');
+const IV=[1,2,4,7,15,30], DAY=864e5, MIN=6e4;
+const learnEl=document.getElementById('learn'),quizEl=document.getElementById('quiz'),rvEl=document.getElementById('review');
 const pbar=document.getElementById('pbar'),pinfo=document.getElementById('pinfo');
-let seen=new Set(JSON.parse(localStorage.getItem('eng_seen')||'[]'));
-function fallbackTTS(t){
-  if(!('speechSynthesis' in window)){alert('当前浏览器不支持语音，请换 Safari 打开');return;}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(t);
-  u.lang='en-US';u.rate=0.85;
-  const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en'));
-  if(v)u.voice=v;
-  speechSynthesis.speak(u);
+/* 迁移旧数据 */
+let prog;
+try{prog=JSON.parse(localStorage.getItem('eng_prog')||'null')||{};}catch(e){prog={};}
+if(!Object.keys(prog).length){
+  const old=new Set(JSON.parse(localStorage.getItem('eng_seen')||'[]'));
+  if(old.size){DATA.forEach((d,i)=>{if(old.has(String(i)))prog[d.w]={s:0,d:Date.now()+DAY};});}
+}
+function saveProg(){localStorage.setItem('eng_prog',JSON.stringify(prog));}
+function touch(w){
+  if(!prog[w]){prog[w]={s:0,d:Date.now()+IV[0]*DAY};saveProg();updateProg();}
+}
+function fmtDue(ms){
+  const diff=ms-Date.now();
+  if(diff<=0)return '今日待复习';
+  if(diff<3600e3)return Math.ceil(diff/MIN)+'分钟后';
+  if(diff<DAY)return Math.ceil(diff/3600e3)+'小时后';
+  return Math.ceil(diff/DAY)+'天后';
+}
+function badgeHtml(w){
+  const p=prog[w];
+  if(!p)return '';
+  if(p.s>=IV.length)return '<span class="badge done">已完成6轮记忆 ✓</span>';
+  const due=p.d<=Date.now();
+  return '<span class="badge'+(due?' due':'')+'">'+(due?'🔴 今日待复习':'第'+(p.s+1)+'轮 · '+fmtDue(p.d)+'复习')+'</span>';
 }
 function speak(t){
   try{
@@ -146,35 +186,94 @@ function speak(t){
   }catch(e){}
   fallbackTTS(t);
 }
+function fallbackTTS(t){
+  if(!('speechSynthesis' in window)){alert('当前浏览器不支持语音，请换 Safari 打开');return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang='en-US';u.rate=0.85;
+  const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en'));
+  if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function speakWord(w){speak(w);touch(w);refreshBadges(w);}
 function updateProg(){
-  pbar.style.width=(seen.size/DATA.length*100)+'%';
-  pinfo.textContent='已学 '+seen.size+' / '+DATA.length;
+  const n=Object.keys(prog).length;
+  pbar.style.width=(n/DATA.length*100)+'%';
+  pinfo.textContent='已学 '+n+' / '+DATA.length+' · 待复习 '+dueList().length;
+}
+function dueList(){
+  return DATA.filter(d=>prog[d.w]&&prog[d.w].s<IV.length&&prog[d.w].d<=Date.now()).map(d=>d.w);
+}
+function refreshBadges(w){
+  const el=document.getElementById('bd_'+w.replace(/ /g,'_'));
+  if(el)el.outerHTML='<span id="bd_'+w.replace(/ /g,'_')+'">'+badgeHtml(w)+'</span>';
 }
 function renderLearn(){
   let lastCat='';
-  learnEl.innerHTML=DATA.map((d,i)=>{
+  learnEl.innerHTML=DATA.map((d)=>{
+    const id=d.w.replace(/ /g,'_');
     let html='';
     if(d.c!==lastCat){lastCat=d.c;html+='<div class="cat">'+d.c+'</div>';}
-    html+='<div class="card" id="card'+i+'">'+
+    html+='<div class="card'+(prog[d.w]&&prog[d.w].d<=Date.now()?' due':'')+'">'+
       '<div class="row1"><span class="word">'+d.w+'</span><span class="pos">'+d.pos+'</span>'+
-      '<button class="speak" onclick="speak(\''+d.w.replace(/'/g,"\\'")+'\')" aria-label="发音">🔊</button></div>'+
+      '<button class="speak" onclick="speakWord(\''+d.w.replace(/'/g,"\\'")+'\')" aria-label="发音">🔊</button></div>'+
+      '<div id="bd_'+id+'">'+badgeHtml(d.w)+'</div>'+
       '<div class="ipa">'+d.ipa+'</div>'+
       '<div class="cn">'+d.cn+'</div>'+
       '<div class="ex"><div class="en">'+d.ex+'</div><div class="zh">'+d.exzh+'</div></div>'+
       '<div class="use">用法：'+d.use+'</div></div>';
     return html;
   }).join('');
-  const io=new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){
-        const i=e.target.id.replace('card','');
-        if(!seen.has(i)){seen.add(i);localStorage.setItem('eng_seen',JSON.stringify([...seen]));updateProg();}
-      }
-    });
-  },{threshold:.6});
-  DATA.forEach((d,i)=>io.observe(document.getElementById('card'+i)));
 }
-/* quiz */
+/* 复习 */
+let rvQueue=[],rvIdx=0;
+function renderReview(){
+  if(!rvQueue.length){
+    rvQueue=dueList();rvIdx=0;
+  }
+  if(!rvQueue.length){
+    const upcoming=DATA.filter(d=>prog[d.w]&&prog[d.w].s<IV.length);
+    const nextT=upcoming.length?Math.min(...upcoming.map(d=>prog[d.w].d)):0;
+    rvEl.innerHTML='<div class="rv-card rv-empty">🎉 今日复习任务已完成！<br>已进入记忆循环的单词：'+upcoming.length+' 个'+
+      (nextT?'<br>最近一次复习：<b>'+fmtDue(nextT)+'</b>':'')+
+      '<br><br>新学的词点🔊后自动加入复习计划</div>';
+    updateProg();
+    return;
+  }
+  const w=rvQueue[rvIdx];
+  const d=DATA.find(x=>x.w===w);
+  rvEl.innerHTML='<div class="rv-card">'+
+    '<div class="hint">复习 '+(rvIdx+1)+' / '+rvQueue.length+' · 第'+(prog[w].s+1)+'轮记忆</div>'+
+    '<div class="rv-word">'+d.w+'</div>'+
+    '<div class="rv-ipa">'+d.ipa+'</div>'+
+    '<button class="rv-speak" onclick="speak(\''+d.w.replace(/'/g,"\\'")+'\')">🔊 听发音</button>'+
+    '<div class="rv-cn" id="rvcn">'+d.cn+'<br><span style="font-size:13px;color:var(--muted)">'+d.ex+'</span></div>'+
+    '<div class="rv-btns">'+
+      '<button class="b-no" onclick="grade(false)">😅 没记住</button>'+
+      '<button class="b-yes" onclick="grade(true)">😄 记住了</button>'+
+    '</div>'+
+    '<button class="rv-next" id="rvnx" onclick="rvIdx++;renderReview()">下一个 →</button>'+
+    '<div class="hint">想不起释义再点「显示」，然后如实评分</div>'+
+  '</div>';
+  const btn=document.createElement('button');
+  btn.className='next';btn.textContent='显示释义';
+  btn.onclick=function(){document.getElementById('rvcn').style.display='block';btn.style.display='none';};
+  rvEl.querySelector('.rv-next').before(btn);
+}
+function grade(ok){
+  const w=rvQueue[rvIdx];
+  const p=prog[w];
+  if(ok){
+    p.s=Math.min(p.s+1,IV.length);
+    p.d=p.s>=IV.length?null:Date.now()+IV[p.s]*DAY;
+  }else{
+    p.s=0;p.d=Date.now()+30*MIN; /* 30分钟后重新出现 */
+  }
+  saveProg();
+  document.getElementById('rvnx').style.display='block';
+  document.querySelectorAll('.rv-btns button').forEach(b=>b.disabled=true);
+}
+/* 自测 */
 let qs=[],qi=0,score=0,answered=false;
 function shuffle(a){return a.slice().sort(()=>Math.random()-.5);}
 function startQuiz(){
@@ -208,9 +307,19 @@ function pick(btn,ans){
   document.getElementById('nx').disabled=false;
 }
 /* tabs */
-const tabL=document.getElementById('tabLearn'),tabQ=document.getElementById('tabQuiz');
-tabL.onclick=()=>{tabL.classList.add('on');tabQ.classList.remove('on');learnEl.style.display='';quizEl.style.display='none';};
-tabQ.onclick=()=>{tabQ.classList.add('on');tabL.classList.remove('on');learnEl.style.display='none';quizEl.style.display='';startQuiz();};
+const tabs={learn:document.getElementById('tabLearn'),review:document.getElementById('tabReview'),quiz:document.getElementById('tabQuiz')};
+function show(name){
+  Object.entries(tabs).forEach(([k,b])=>b.classList.toggle('on',k===name));
+  learnEl.style.display=name==='learn'?'':'none';
+  rvEl.style.display=name==='review'?'':'none';
+  quizEl.style.display=name==='quiz'?'':'none';
+  if(name==='review'){rvQueue=[];renderReview();}
+  if(name==='quiz')startQuiz();
+  if(name==='learn')renderLearn();
+}
+tabs.learn.onclick=()=>show('learn');
+tabs.review.onclick=()=>show('review');
+tabs.quiz.onclick=()=>show('quiz');
 if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>{};speechSynthesis.getVoices();}
 renderLearn();updateProg();
 </script>
