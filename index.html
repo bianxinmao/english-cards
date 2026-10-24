@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>英语学习卡片</title>
+<style>
+:root{
+  --bg:#f7f6f3; --card:#ffffff; --ink:#1d2733; --muted:#6b7683;
+  --line:#e5e2dc; --accent:#0e7a5f; --accent-soft:#e3f2ed;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px calc(88px + env(safe-area-inset-bottom));}
+header{padding:8px 2px 18px;}
+header h1{font-size:22px;letter-spacing:.5px;}
+header p{color:var(--muted);font-size:13px;margin-top:4px;}
+.tabs{display:flex;gap:8px;margin-bottom:16px;}
+.tab{
+  flex:1;padding:11px 0;text-align:center;font-size:15px;border-radius:999px;
+  border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer;
+}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+.cat{font-size:13px;color:var(--accent);font-weight:600;margin:18px 2px 8px;}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px;
+}
+.row1{display:flex;align-items:center;gap:10px;}
+.word{font-size:22px;font-weight:700;letter-spacing:.3px;}
+.pos{font-size:12px;color:var(--muted);background:var(--bg);border-radius:6px;padding:2px 7px;}
+.speak{
+  margin-left:auto;min-width:44px;height:38px;border:none;border-radius:10px;
+  background:var(--accent-soft);color:var(--accent);font-size:16px;cursor:pointer;
+}
+.speak:active{transform:scale(.95)}
+.ipa{font-family:"Times New Roman",serif;color:var(--accent);font-size:15px;margin-top:5px;}
+.cn{font-size:15px;margin-top:7px;}
+.ex{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+.ex .en{font-size:14.5px;line-height:1.5;}
+.ex .zh{font-size:13.5px;color:var(--muted);margin-top:3px;}
+.use{font-size:13px;color:var(--muted);margin-top:9px;line-height:1.55;}
+.use b{color:var(--ink);font-weight:600;}
+/* quiz */
+.quiz-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px;}
+.q-head{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:14px;}
+.q-word{font-size:24px;font-weight:700;text-align:center;margin:14px 0 4px;}
+.q-ipa{text-align:center;color:var(--accent);font-family:"Times New Roman",serif;margin-bottom:16px;}
+.opt{
+  display:block;width:100%;text-align:left;padding:14px 14px;margin-bottom:10px;
+  border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px;cursor:pointer;min-height:48px;
+}
+.opt.right{border-color:var(--accent);background:var(--accent-soft);}
+.opt.wrong{border-color:#c0392b;background:#fbeaea;}
+.opt:disabled{cursor:default;}
+.next{
+  width:100%;padding:13px;border:none;border-radius:12px;background:var(--ink);
+  color:#fff;font-size:15px;cursor:pointer;margin-top:4px;min-height:48px;
+}
+.next:disabled{opacity:.35;}
+.done{text-align:center;padding:30px 10px;}
+.done .big{font-size:40px;font-weight:800;color:var(--accent);}
+.done p{color:var(--muted);margin:10px 0 18px;}
+/* bottom bar */
+.bottom{
+  position:fixed;left:0;right:0;bottom:0;background:var(--card);
+  border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+}
+.bottom .bar{max-width:520px;margin:0 auto;}
+.prog{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:8px;}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .3s;}
+.bl{font-size:12px;color:var(--muted);text-align:center;}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>英语学习卡片</h1>
+    <p>发音 · 用法 · 翻译 · 自测 —— 职场实用篇</p>
+  </header>
+  <div class="tabs">
+    <button class="tab on" id="tabLearn">学习</button>
+    <button class="tab" id="tabQuiz">自测</button>
+  </div>
+  <div id="learn"></div>
+  <div id="quiz" style="display:none"></div>
+</div>
+<div class="bottom"><div class="bar">
+  <div class="prog"><i id="pbar" style="width:0%"></i></div>
+  <div class="bl" id="pinfo">已学 0 / 0</div>
+</div></div>
+
+<script>
+const DATA=[
+ {c:"开会与讨论",w:"schedule",ipa:"/ˈskedʒuːl/ 美 /ˈskedʒʊl/",pos:"n./v.",cn:"日程；安排，预定",ex:"Let's schedule a meeting for Thursday afternoon.",exzh:"我们把会议安排在周四下午吧。",use:"职场高频词。名词指<b>日程表</b>（on schedule 按时 / behind schedule 拖延），动词指<b>安排时间</b>：schedule a call / a meeting。"},
+ {c:"开会与讨论",w:"deadline",ipa:"/ˈdedlaɪn/",pos:"n.",cn:"截止日期，最后期限",ex:"The deadline for the report is Friday.",exzh:"报告的截止日期是周五。",use:"固定搭配 <b>meet the deadline</b>（赶上期限）和 <b>miss the deadline</b>（错过期限），审计和项目里最常用。"},
+ {c:"开会与讨论",w:"confirm",ipa:"/kənˈfɜːrm/",pos:"v.",cn:"确认，证实",ex:"Please confirm receipt of this email.",exzh:"请确认收到这封邮件。",use:"商务邮件必备。<b>confirm</b> 后直接接名词或 that 从句；名词形式是 confirmation。"},
+ {c:"开会与讨论",w:"review",ipa:"/rɪˈvjuː/",pos:"n./v.",cn:"审阅，复核；回顾",ex:"We need to review the working papers before submission.",exzh:"提交前我们需要复核底稿。",use:"审计场景高频：review the files / papers（复核底稿）。名词 review 常指<b>复核程序</b>。"},
+ {c:"开会与讨论",w:"proposal",ipa:"/prəˈpoʊzl/",pos:"n.",cn:"提案，建议书",ex:"The client accepted our audit proposal.",exzh:"客户接受了我们的审计建议书。",use:"动词是 propose（提议）。常用搭配 <b>submit a proposal</b>（提交提案）、<b>approve a proposal</b>（批准提案）。"},
+ {c:"财务与审计",w:"reconcile",ipa:"/ˈrekənsaɪl/",pos:"v.",cn:"核对，对账；使一致",ex:"We must reconcile the bank statement with the ledger.",exzh:"我们必须把银行对账单和总账核对一致。",use:"财务核心词。名词 <b>reconciliation</b>（银行余额调节表）。注意重音在第一音节。"},
+ {c:"财务与审计",w:"ledger",ipa:"/ˈledʒər/",pos:"n.",cn:"总账，分类账",ex:"All entries are recorded in the general ledger.",exzh:"所有分录都记在总账里。",use:"general ledger（总账，缩写 GL）是审计底稿常见缩写。sub-ledger 是明细账。"},
+ {c:"财务与审计",w:"adjustment",ipa:"/əˈdʒʌstmənt/",pos:"n.",cn:"调整，调整分录",ex:"The auditor proposed two adjustments to the financial statements.",exzh:"审计师对财务报表提出了两项调整。",use:"审计里 audit adjustment 指<b>审计调整分录</b>。动词 adjust（调整），re adjusting entry = 调整分录。"},
+ {c:"财务与审计",w:"materiality",ipa:"/məˌtɪriˈæləti/",pos:"n.",cn:"重要性（水平）",ex:"We set materiality at 5% of total assets.",exzh:"我们将重要性水平设定为总资产的5%。",use:"审计最核心概念之一。形容词 <b>material</b>（重大的）：a material misstatement 重大错报。"},
+ {c:"财务与审计",w:"voucher",ipa:"/ˈvaʊtʃər/",pos:"n.",cn:"凭证，凭单",ex:"Please attach the invoice to the payment voucher.",exzh:"请把发票附在付款凭证后面。",use:"payment voucher 付款凭证，reimbursement voucher 报销单。国内财务说的「凭证」就是它。"},
+ {c:"财务与审计",w:"receivable",ipa:"/rɪˈsiːvəbl/",pos:"n.(常用复数)",cn:"应收款项",ex:"Accounts receivable increased by 10% this quarter.",exzh:"本季度应收账款增长了10%。",use:"accounts receivable（AR）应收账款；notes receivable 应收票据；对面的应付账款是 accounts <b>payable</b>。"},
+ {c:"财务与审计",w:"depreciation",ipa:"/dɪˌpriːʃiˈeɪʃn/",pos:"n.",cn:"折旧",ex:"Annual depreciation of the equipment is recorded monthly.",exzh:"设备年折旧按月记录。",use:"固定短语 <b>accumulated depreciation</b>（累计折旧）。动词 depreciate（贬值、计提折旧）。"},
+ {c:"数据与分析",w:"analyze",ipa:"/ˈænəlaɪz/",pos:"v.",cn:"分析",ex:"We analyzed the data from three different angles.",exzh:"我们从三个不同角度分析了数据。",use:"英式拼写 analyse，美式 analyze。名词 analysis（复数 analyses），注意发音重音变化 /əˈnæləsɪs/。"},
+ {c:"数据与分析",w:"trend",ipa:"/trend/",pos:"n.",cn:"趋势，走向",ex:"The trend shows a steady increase in revenue.",exzh:"趋势显示收入稳步增长。",use:"数据分析高频：an upward/downward trend 上升/下降趋势；follow the trend 跟随趋势。"},
+ {c:"数据与分析",w:"fluctuate",ipa:"/ˈflʌktʃueɪt/",pos:"v.",cn:"波动，起伏",ex:"Exchange rates fluctuated sharply last month.",exzh:"上月汇率剧烈波动。",use:"名词 fluctuation。比 change 更精确，专指<b>不规则上下波动</b>，财务和数据分析里很常用。"},
+ {c:"数据与分析",w:"criteria",ipa:"/kraɪˈtɪriə/",pos:"n.(复数)",cn:"标准，准则",ex:"We sorted the samples according to strict criteria.",exzh:"我们按严格的标准筛选样本。",use:"单数是 <b>criterion</b>。作复数用，后面接 of/for：criteria for selection 遴选标准。"},
+ {c:"数据与分析",w:"significant",ipa:"/sɪɡˈnɪfɪkənt/",pos:"adj.",cn:"显著的；重要的",ex:"There is a significant difference between the two groups.",exzh:"两组之间存在显著差异。",use:"统计学里指<b>统计显著</b>（statistically significant）；日常指「明显的、值得注意的」。"},
+ {c:"数据与分析",w:"estimate",ipa:"/ˈestɪmeɪt/ (v.) /ˈestɪmət/ (n.)",pos:"v./n.",cn:"估计；估算值",ex:"We estimate the cost at around 50,000 dollars.",exzh:"我们估计费用在5万美元左右。",use:"注意：动词和名词拼写相同但<b>重音不同</b>。名词 an estimate；动词 estimate the cost。"},
+ {c:"日常沟通",w:"available",ipa:"/əˈveɪləbl/",pos:"adj.",cn:"可用的；有空的",ex:"Are you available for a quick call tomorrow morning?",exzh:"明天早上你有空接个简短电话吗？",use:"问人有没有空最礼貌的说法就是 Are you available...? 反义 unavailable。文件「可供查阅」也可用 available。"},
+ {c:"日常沟通",w:"appreciate",ipa:"/əˈpriːʃieɪt/",pos:"v.",cn:"感激；理解，意识到",ex:"I really appreciate your help with this matter.",exzh:"非常感谢你在这件事上的帮助。",use:"商务邮件结尾礼貌用语：<b>I would appreciate it if you could...</b>（如果您能……我将不胜感激）。"},
+ {c:"日常沟通",w:"follow up",ipa:"/ˈfɒloʊ ʌp/",pos:"v.短语",cn:"跟进，后续联系",ex:"I'm following up on my email from last week.",exzh:"我想跟进一下我上周发的邮件。",use:"催办必备。follow up on + 事项；名词 a follow-up。礼貌催别人回复就用这个开头。"},
+ {c:"日常沟通",w:"prioritize",ipa:"/praɪˈɔːrətaɪz/",pos:"v.",cn:"优先处理，排优先级",ex:"Please prioritize the urgent tasks first.",exzh:"请优先处理紧急任务。",use:"名词 priority（优先事项）。top priority 头等大事；low priority 优先级低。"},
+ {c:"日常沟通",w:"compromise",ipa:"/ˈkɑːmprəmaɪz/",pos:"n./v.",cn:"妥协，折中方案",ex:"We reached a compromise on the delivery date.",exzh:"我们就交货日期达成了折中方案。",use:"reach/make a compromise 达成妥协。注意另一义：<b>compromise security</b> 危及安全（数据泄露新闻常用）。"},
+ {c:"日常沟通",w:"regarding",ipa:"/rɪˈɡɑːrdɪŋ/",pos:"prep.",cn:"关于",ex:"I'm writing regarding your recent inquiry.",exzh:"来信是关于您近期的咨询。",use:"邮件主题行高频：Regarding + 事项 = 「关于……」。同义 in regard to / with regard to，比 about 更正式。"}
+];
+const learnEl=document.getElementById('learn'),quizEl=document.getElementById('quiz');
+const pbar=document.getElementById('pbar'),pinfo=document.getElementById('pinfo');
+let seen=new Set(JSON.parse(localStorage.getItem('eng_seen')||'[]'));
+function speak(t){
+  if(!('speechSynthesis' in window)){alert('当前浏览器不支持语音');return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang='en-US';u.rate=0.85;
+  const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en'));
+  if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function updateProg(){
+  pbar.style.width=(seen.size/DATA.length*100)+'%';
+  pinfo.textContent='已学 '+seen.size+' / '+DATA.length;
+}
+function renderLearn(){
+  let lastCat='';
+  learnEl.innerHTML=DATA.map((d,i)=>{
+    let html='';
+    if(d.c!==lastCat){lastCat=d.c;html+='<div class="cat">'+d.c+'</div>';}
+    html+='<div class="card" id="card'+i+'">'+
+      '<div class="row1"><span class="word">'+d.w+'</span><span class="pos">'+d.pos+'</span>'+
+      '<button class="speak" onclick="speak(\''+d.w.replace(/'/g,"\\'")+'\')" aria-label="发音">🔊</button></div>'+
+      '<div class="ipa">'+d.ipa+'</div>'+
+      '<div class="cn">'+d.cn+'</div>'+
+      '<div class="ex"><div class="en">'+d.ex+'</div><div class="zh">'+d.exzh+'</div></div>'+
+      '<div class="use">用法：'+d.use+'</div></div>';
+    return html;
+  }).join('');
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        const i=e.target.id.replace('card','');
+        if(!seen.has(i)){seen.add(i);localStorage.setItem('eng_seen',JSON.stringify([...seen]));updateProg();}
+      }
+    });
+  },{threshold:.6});
+  DATA.forEach((d,i)=>io.observe(document.getElementById('card'+i)));
+}
+/* quiz */
+let qs=[],qi=0,score=0,answered=false;
+function shuffle(a){return a.slice().sort(()=>Math.random()-.5);}
+function startQuiz(){
+  qs=shuffle(DATA).map(d=>{
+    const wrongs=shuffle(DATA.filter(x=>x!==d)).slice(0,3).map(x=>x.cn);
+    return {w:d.w,ipa:d.ipa,answer:d.cn,opts:shuffle([d.cn,...wrongs])};
+  });
+  qi=0;score=0;renderQ();
+}
+function renderQ(){
+  answered=false;
+  if(qi>=qs.length){
+    quizEl.innerHTML='<div class="quiz-card done"><div class="big">'+score+' / '+qs.length+'</div><p>本轮测试完成</p><button class="next" onclick="startQuiz()">再来一轮</button></div>';
+    return;
+  }
+  const q=qs[qi];
+  quizEl.innerHTML='<div class="quiz-card">'+
+    '<div class="q-head"><span>第 '+(qi+1)+' / '+qs.length+' 题</span><span>得分 '+score+'</span></div>'+
+    '<div class="q-word">'+q.w+' <button class="speak" onclick="speak(\''+q.w.replace(/'/g,"\\'")+'\')" aria-label="发音">🔊</button></div>'+
+    '<div class="q-ipa">'+q.ipa+'</div>'+
+    q.opts.map(o=>'<button class="opt" onclick="pick(this,\''+q.answer.replace(/'/g,"\\'")+'\')">'+o+'</button>').join('')+
+    '<button class="next" id="nx" disabled onclick="qi++;renderQ()">下一题</button></div>';
+}
+function pick(btn,ans){
+  if(answered)return;answered=true;
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===ans)b.classList.add('right');
+  });
+  if(btn.textContent===ans)score++;else btn.classList.add('wrong');
+  document.getElementById('nx').disabled=false;
+}
+/* tabs */
+const tabL=document.getElementById('tabLearn'),tabQ=document.getElementById('tabQuiz');
+tabL.onclick=()=>{tabL.classList.add('on');tabQ.classList.remove('on');learnEl.style.display='';quizEl.style.display='none';};
+tabQ.onclick=()=>{tabQ.classList.add('on');tabL.classList.remove('on');learnEl.style.display='none';quizEl.style.display='';startQuiz();};
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>{};speechSynthesis.getVoices();}
+renderLearn();updateProg();
+</script>
+</body>
+</html>
